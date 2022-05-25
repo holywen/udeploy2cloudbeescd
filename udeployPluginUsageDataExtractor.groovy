@@ -38,4 +38,4 @@ def getComponentPlugin( component ) {
 }
 
 
-plugins.unique()
+plugins.unique().sort()
