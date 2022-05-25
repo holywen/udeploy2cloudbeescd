@@ -5,7 +5,6 @@ def myApplicationDesc = args.description
 def myAppTier = "Tier 1"
 
 def myComponents = args.components
-File file = new File("out.txt")
 def plugins = []
 
 myComponents.each { myComponent ->
