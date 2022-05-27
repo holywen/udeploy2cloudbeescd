@@ -194,7 +194,10 @@ def getComponentPlugin( component ) {
 
 def createDummyProcessStep(contextPath, dummyStep ){
   println "context path: $contextPath"
-  println "unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
+  def outputString =  "            unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
+  if(dummyStep.type.equals("plugin"))
+    outputString +=  "->" + dummyStep.pluginName + ":" + dummyStep.commandName
+  println outputString
   processStep dummyStep.name, {
     actualParameter = [
       'commandToRun': 'echo dummyStep',
