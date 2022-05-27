@@ -4,7 +4,7 @@ def myApplicationName = args.name
 def myApplicationDesc = args.description
 def myAppTier = "Tier 1"
 
-def myComponents = args.components
+def myUdeployComponents = args.components
 
 application myApplicationName, {
   description = myApplicationDesc
@@ -17,25 +17,25 @@ application myApplicationName, {
     applicationName = myApplicationName
 
     //components
-    myComponents.each { myComponent ->
-      def myComponentName = myComponent.name
+    myUdeployComponents.each { myComponent ->
+      def myUdeployComponentName = myComponent.name
       def myComponentDesc = myComponent.description
       def myComponentPlugin = getComponentPlugin( myComponent )
       
       //component
-      component myComponentName, pluginName: null, {
+      component myUdeployComponentName, pluginName: null, {
         description = myComponentDesc
         pluginKey = myComponentPlugin
         
 
         //component processes
-        def myComponentProcesses = myComponent.processes
-        myComponentProcesses.each{ myComponentProcess ->
-          process myComponentProcess.name, {
+        def myUdeployComponenProcesses = myComponent.processes
+        myUdeployComponenProcesses.each{ myUdeployComponenProcess ->
+          process myUdeployComponenProcess.name, {
               processType = 'DEPLOY'
 
               //process parameters
-              def componentProcessParams = myComponentProcess.propDefs
+              def componentProcessParams = myUdeployComponenProcess.propDefs
               componentProcessParams.each{ componentParameter ->
                 switch(componentParameter.type){
                   case "TEXT":
@@ -87,6 +87,63 @@ application myApplicationName, {
                 }
               
               }
+
+              def componentProcessRootActivity = myUdeployComponenProcess.rootActivity
+              def componentProcessEdges = componentProcessRootActivity?.edges
+              def componentProcessSteps = componentProcessRootActivity?.children
+
+              //process steps
+              componentProcessSteps.each{ compProcessStep ->
+                switch(compProcessStep.type){
+                  case "plugin":
+                    switch(compProcessStep.pluginName){
+                      case "Shell":
+                        //println "process step:" + compProcessStep.pluginName                          
+                        def useImpersonation = compProcessStep.useImpersonation
+                        def allowFailure = compProcessStep.allowFailure
+                        def impersonationUsername = compProcessStep.impersonationUsername
+                        def impersonationUseSudo = compProcessStep.impersonationUseSudo
+                        def commandName = compProcessStep.commandName
+                        def stepProperties = compProcessStep.properties
+                        def scriptBody = stepProperties.scriptBody
+                        def shellName = stepProperties.shellInterpreter
+                        def workingDirectory = stepProperties.directoryOffset
+                        //todo: fix impersonation
+                        //println "Shell plugin: $commandName ${compProcessStep.name}"
+                        processStep compProcessStep.name, {
+                          actualParameter = [
+                            'commandToRun': scriptBody,
+                            'shellToUse': shellName, 
+                          ]
+                          workingDirectory = workingDirectory
+                          processStepType = 'command'
+                          subprocedure = 'RunCommand'
+                          subproject = '/plugins/EC-Core/project'
+                        }
+                        break;
+                      default:
+                        println "unsupported component process step type " + myUdeployComponentName + ":"  + myUdeployComponenProcess.name + ":" + compProcessStep.pluginName
+                    }
+                    break;
+                  case "finish":
+                    //do nothing
+                    break;
+                  case "switch":
+                  case "join":
+
+                  default:
+                    println "unsupported component process step type " + myUdeployComponentName + ":"  + myUdeployComponenProcess.name + ":" + compProcessStep.type
+                }
+                
+              }
+
+              //process step dependencies
+              componentProcessEdges.each{ edge ->
+
+              }
+
+
+
           }
         }
 
