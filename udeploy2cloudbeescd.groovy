@@ -106,16 +106,18 @@ application myApplicationName, {
                         def commandName = compProcessStep.commandName
                         def stepProperties = compProcessStep.properties
                         def scriptBody = stepProperties.scriptBody
-                        def shellName = stepProperties.shellInterpreter
-                        def workingDirectory = stepProperties.directoryOffset
+                        def shellInterpreter = stepProperties.shellInterpreter
+                        def directoryOffset = stepProperties.directoryOffset
                         //todo: fix impersonation
                         //println "Shell plugin: $commandName ${compProcessStep.name}"
+
                         processStep compProcessStep.name, {
                           actualParameter = [
                             'commandToRun': scriptBody,
-                            'shellToUse': shellName, 
+                            'shellToUse': shellInterpreter, 
                           ]
-                          workingDirectory = workingDirectory
+                          workingDirectory = directoryOffset
+                          errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
                           processStepType = 'command'
                           subprocedure = 'RunCommand'
                           subproject = '/plugins/EC-Core/project'
