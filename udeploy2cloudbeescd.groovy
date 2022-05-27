@@ -60,8 +60,30 @@ application myApplicationName, {
                       type = 'select'
                     }
                     break;
+                  case "TEXTAREA":
+                    formalParameter componentParameter.name, defaultValue: componentParameter.value, {
+                      description = componentParameter.description
+                      label = componentParameter.label
+                      required = componentParameter.required == true? '1':'0';
+                      type = 'textarea'
+                    }
+                    break;
+                  case "CHECKBOX":
+                    formalParameter componentParameter.name, defaultValue: componentParameter.value,{
+                      checkedValue = 'true'
+                      type = 'checkbox'
+                      uncheckedValue = 'false'
+                    }
+                    break;
+                  case "SECURE":
+                    formalParameter componentParameter.name, defaultValue: null, {
+                      label = componentParameter.label
+                      required = componentParameter.required == true? '1':'0';
+                      type = 'credential'
+                    }
+                    break;
                   default:
-                    println "unsupported component parameter type " + componentParameter.type
+                    println "unsupported component parameter type " + componentParameter
                 }
               
               }
