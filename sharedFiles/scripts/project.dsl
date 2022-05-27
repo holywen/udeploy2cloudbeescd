@@ -1,0 +1,1 @@
+project "My new project"
