@@ -71,5 +71,107 @@ abstract class DslBaseScript extends DslDelegatingScript {
     // end boiler-plate
 
 
+	def createFormalParameter(def args) {
+		switch(args.type){
+			case "TEXT":
+				formalParameter args.name, defaultValue: args.value, {
+				description = args.description
+				label = args.label
+				required = args.required == true? '1':'0';
+				type = 'entry'
+				}
+				break
+			case "SELECT":
+				formalParameter args.name, defaultValue:  args.value, {
+				expansionDeferred = '0'
+				label = args.label
+				def optionsMap = [:]
+				args.allowedValues.each { allowedValue ->
+					optionsMap[(allowedValue.label)] = allowedValue.value
+				}
+
+				options = optionsMap
+				required = args.required == true? '1':'0';
+				type = 'select'
+				}
+				break
+			case "TEXTAREA":
+				formalParameter args.name, defaultValue: args.value, {
+				description = args.description
+				label = args.label
+				required = args.required == true? '1':'0';
+				type = 'textarea'
+				}
+				break
+			case "CHECKBOX":
+				formalParameter args.name, defaultValue: args.value,{
+				checkedValue = 'true'
+				type = 'checkbox'
+				uncheckedValue = 'false'
+				}
+				break
+			case "SECURE":
+				formalParameter args.name, defaultValue: null, {
+				label = args.label
+				required = args.required == true? '1':'0';
+				type = 'credential'
+				}
+				break
+			default:
+				println "unsupported component parameter type " + args
+			}
+	}
+
+	def getComponentPlugin( component ) {
+		if(component.sourceConfigPluginName.equals("Maven")){
+			return "EC-Maven"
+		} else if (component.sourceConfigPluginName.equals("Artifactory")){
+			return "EC-Artifactory"
+		} else {
+			return "EC-Artifact"
+		}
+	}
+
+  def createShellStep(def args){
+    def useImpersonation = args.useImpersonation
+    def allowFailure = args.allowFailure
+    def impersonationUsername = args.impersonationUsername
+    def impersonationUseSudo = args.impersonationUseSudo
+    def commandName = args.commandName
+    def stepProperties = args.properties
+    def scriptBody = stepProperties.scriptBody
+    def shellInterpreter = stepProperties.shellInterpreter
+    def directoryOffset = stepProperties.directoryOffset
+    //todo: fix impersonation
+    //println "Shell plugin: $commandName ${args.name}"
+
+    processStep args.name, {
+      actualParameter = [
+        'commandToRun': scriptBody,
+        'shellToUse': shellInterpreter,
+      ]
+      workingDirectory = directoryOffset
+      errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+      processStepType = 'command'
+      subprocedure = 'RunCommand'
+      subproject = '/plugins/EC-Core/project'
+    }
+  }
+
+	def createDummyProcessStep(contextPath, dummyStep ){
+    println "context path: $contextPath"
+    def outputString =  "            unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
+    if(dummyStep.type.equals("plugin"))
+      outputString +=  "->" + dummyStep.pluginName + ":" + dummyStep.commandName
+    println outputString
+    processStep dummyStep.name, {
+      actualParameter = [
+      'commandToRun': 'echo dummyStep',
+      ]
+      processStepType = 'command'
+      subprocedure = 'RunCommand'
+      subproject = '/plugins/EC-Core/project'
+    }
+	}
 }
 
