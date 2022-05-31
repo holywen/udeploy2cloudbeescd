@@ -140,6 +140,19 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		}
 	}
 
+  def createComponentProcessInvokeStep(args, appName, appTier){
+    def allowFailure = args.allowFailure
+    println "process step creation: $args" 
+    processStep args.name, {
+      errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+      applicationTierName = appTier
+      processStepType = 'process'
+      subcomponent = args.componentName
+      subcomponentApplicationName = appName
+      subcomponentProcess = args.componentProcessName
+    }
+  }
+
   def createShellStep(def args){
     def useImpersonation = args.useImpersonation
     def allowFailure = args.allowFailure
@@ -166,7 +179,11 @@ abstract class DslBaseScript extends DslDelegatingScript {
     }
   }
 
-	def createDummyProcessStep(contextPath, dummyStep ){
+	def createDummyCompProcessStep(contextPath, dummyStep ){
+    createDummyAppProcessStep(contextPath, dummyStep, null)
+	}
+
+  def createDummyAppProcessStep(contextPath, dummyStep, appTierName){
     println "context path: $contextPath"
     def outputString =  "            unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
     if(dummyStep.type.equals("plugin"))
@@ -176,6 +193,9 @@ abstract class DslBaseScript extends DslDelegatingScript {
       actualParameter = [
       'commandToRun': 'echo dummyStep',
       ]
+      if(appTierName != null){
+        applicationTierName = appTierName
+      }
       processStepType = 'command'
       subprocedure = 'RunCommand'
       subproject = '/plugins/EC-Core/project'

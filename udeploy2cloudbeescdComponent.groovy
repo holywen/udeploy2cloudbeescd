@@ -77,12 +77,12 @@ application myApplicationName, {
                             case "Unzip":
                             case "Update XML File with XPath":
                             default:
-                              createDummyProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                              createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
                           }
                           break
 
                         default:
-                          createDummyProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                          createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
                       }
                       break
                     case "finish":
@@ -91,7 +91,7 @@ application myApplicationName, {
                     case "switch":
                     case "join":
                     default:
-                      createDummyProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                      createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
                   }
 
                 }
