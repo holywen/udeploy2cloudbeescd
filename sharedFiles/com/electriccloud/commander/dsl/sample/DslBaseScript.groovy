@@ -4,6 +4,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import com.electriccloud.commander.dsl.DslDelegate
 import com.electriccloud.commander.dsl.DslDelegatingScript
 import java.util.logging.Logger
+import groovy.json.*
 
 abstract class DslBaseScript extends DslDelegatingScript {
 
@@ -47,6 +48,13 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		return script.run();
 
 	}
+
+  def readConfigFile(){
+    def jsonSlurper = new JsonSlurper()
+    def configsJson = scriptClassLoader.getResourceAsStream("config.json").text.trim()
+    def config = jsonSlurper.parseText(configsJson)
+    return config
+  }
 
 	/**
 	 * Intercept the DslDelegate so it can be set as the delegate on the

@@ -4,7 +4,8 @@ import com.electriccloud.commander.dsl.sample.DslBaseScript
 // DslBaseScript encapsulates the magic for invoking dsl scripts
 @BaseScript DslBaseScript baseScript
 
-def myProjectName = "Holy Proj"
+def myConfig = readConfigFile()
+def myProjectName = myConfig.projectName
 
 def myApplicationName = args.name
 def myApplicationDesc = args.description
