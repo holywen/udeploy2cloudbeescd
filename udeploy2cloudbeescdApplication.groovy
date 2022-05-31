@@ -11,6 +11,8 @@ def myApplicationName = args.name
 def myApplicationDesc = args.description
 def myUdeployApplicationProcesses = args.processes
 def myAppTier = "Tier 1"
+InputStream stream = getScriptClassLoader().getResourceAsStream("targetProcess.txt")
+def targetProcess = stream?.text.trim()
 
 application myApplicationName, {
   description = myApplicationDesc
@@ -19,72 +21,76 @@ application myApplicationName, {
 
   //application processes
   myUdeployApplicationProcesses.each{ myUdeployApplicationProcess ->
-    process myUdeployApplicationProcess.name, {
-        processType = 'DEPLOY'
+    if(myUdeployApplicationProcess.name.equals(targetProcess)){
+      println "processing process ${myUdeployApplicationProcess.name}"
+      process myUdeployApplicationProcess.name, {
+          processType = 'DEPLOY'
 
-        //process parameters
-        def applicationProcessParams = myUdeployApplicationProcess.propDefs
-        applicationProcessParams.each{ applicationParameter ->
-          createFormalParameter(applicationParameter)
-        }
-
-        //process steps
-        def applicationProcessRootActivity = myUdeployApplicationProcess.rootActivity
-        def applicationProcessEdges = applicationProcessRootActivity?.edges
-        def applicationProcessSteps = applicationProcessRootActivity?.children
-
-        def finishStepNodeName = applicationProcessSteps.find{ it.type == 'finish'}?.name
-        def processStepNameMap = [:]
-
-        applicationProcessSteps.each{ appProcessStep ->
-          switch(appProcessStep.type){
-            case "componentEnvironmentIterator":
-              updateStepNameMapping(processStepNameMap, appProcessStep)
-              def componentProcessStepInvokeData = getComponentProcessStepInvokeData(appProcessStep)
-              createComponentProcessInvokeStep(componentProcessStepInvokeData, myApplicationName, myAppTier)
-              break
-            case "componentProcess":
-              createComponentProcessInvokeStep(appProcessStep, myApplicationName,  myAppTier)
-              break
-            case "plugin":
-              switch(appProcessStep.pluginName){
-                case "Shell":
-                  createShellStep(appProcessStep)
-                  break
-                case "File Utils":
-                  switch(appProcessStep.commandName){
-                    case "Copy Directory":
-                    case "Create Directories":
-                    case "Create File":
-                    case "Delete Files and Directories":
-                    case "Flip Line Endings":
-                    case "Move Directory":
-                    case "Replace Tokens":
-                    case "Untar Tarball":
-                    case "Unzip":
-                    case "Update XML File with XPath":
-                    default:
-                      createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
-                  }
-                  break
-
-                default:
-                  createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
-              }
-              break
-            case "finish":
-              //do nothing
-              break;
-            case "switch":
-            case "join":
-            default:
-              createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+          //process parameters
+          def applicationProcessParams = myUdeployApplicationProcess.propDefs
+          applicationProcessParams.each{ applicationParameter ->
+            createFormalParameter(applicationParameter)
           }
-        }
 
-        println(processStepNameMap)
+          //process steps
+          def applicationProcessRootActivity = myUdeployApplicationProcess.rootActivity
+          def applicationProcessEdges = applicationProcessRootActivity?.edges
+          def applicationProcessSteps = applicationProcessRootActivity?.children
 
+          def finishStepNodeName = applicationProcessSteps.find{ it.type == 'finish'}?.name
+          def processStepNameMap = [:]
+
+          applicationProcessSteps.each{ appProcessStep ->
+            switch(appProcessStep.type){
+              case "componentEnvironmentIterator":
+                updateStepNameMapping(processStepNameMap, appProcessStep)
+                def componentProcessStepInvokeData = getComponentProcessStepInvokeData(appProcessStep)
+                createComponentProcessInvokeStep(componentProcessStepInvokeData, myApplicationName, myAppTier)
+                break
+              case "componentProcess":
+                createComponentProcessInvokeStep(appProcessStep, myApplicationName,  myAppTier)
+                break
+              case "plugin":
+                switch(appProcessStep.pluginName){
+                  case "Shell":
+                    createShellStep(appProcessStep)
+                    break
+                  case "File Utils":
+                    switch(appProcessStep.commandName){
+                      case "Copy Directory":
+                      case "Create Directories":
+                      case "Create File":
+                      case "Delete Files and Directories":
+                      case "Flip Line Endings":
+                      case "Move Directory":
+                      case "Replace Tokens":
+                      case "Untar Tarball":
+                      case "Unzip":
+                      case "Update XML File with XPath":
+                      default:
+                        createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+                    }
+                    break
+
+                  default:
+                    createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+                }
+                break
+              case "finish":
+                //do nothing
+                break;
+              case "switch":
+              case "join":
+              default:
+                createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+            }
+          }
+
+          println("" + processStepNameMap)
+
+      }
     }
+
   }
 
 }

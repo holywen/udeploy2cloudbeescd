@@ -142,7 +142,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createComponentProcessInvokeStep(args, appName, appTier){
     def allowFailure = args.allowFailure
-    println "process step creation: $args" 
+    // println "process step creation: $args" 
     processStep args.name, {
       errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
       applicationTierName = appTier

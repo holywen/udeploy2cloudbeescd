@@ -11,6 +11,8 @@ if [ $# != 2 ]; then
 fi
 
 components_file=components.txt
+app_processes_file=processes.txt
+
 project_name=$1
 param_filename=$2
 
@@ -21,7 +23,11 @@ cat  << EOF > sharedFiles/config.json
 EOF
 
 if [ ! -f "${components_file}" ]; then
-  jq '.components [] | .name' $1 > ${components_file}
+  jq '.components [] | .name' ${param_filename} > ${components_file}
+fi
+
+if [ ! -f "${app_processes_file}" ]; then
+  jq '.processes [] | .name' ${param_filename} > ${app_processes_file}
 fi
 
 IFS=$'\n'
@@ -34,4 +40,9 @@ do
   rm -f clientFiles_*.zip
 done
 
-ectool  --timeout 3600 evalDsl --timeout 3600 --dslFile udeploy2cloudbeescdApplication.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
+for process in $(cat ${app_processes_file})
+do
+  echo "${process//\"/}" > sharedFiles/targetProcess.txt
+  ectool  --timeout 3600 evalDsl --timeout 3600 --dslFile udeploy2cloudbeescdApplication.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
+  rm -f clientFiles_*.zip
+done

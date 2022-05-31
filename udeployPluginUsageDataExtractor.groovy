@@ -11,7 +11,7 @@ myComponents.each { myComponent ->
   def myComponentName = myComponent.name
   def myComponentDesc = myComponent.description
   def myComponentPlugin = getComponentPlugin( myComponent)
-  
+
   //println myComponentPlugin
   def compProcesses = myComponent.processes
   compProcesses.each{ compProcess ->
@@ -22,9 +22,9 @@ myComponents.each { myComponent ->
         plugins << myStep.pluginName + ":" + myStep.commandName
     }
   }
-  
+
 }
- 
+
 
 
 def getComponentPlugin( component ) {
