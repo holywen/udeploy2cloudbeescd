@@ -88,11 +88,27 @@ application myApplicationName, {
 
           println("" + processStepNameMap)
 
+          //process step dependencies
+          if ( finishStepNodeName != null ) {
+            applicationProcessEdges.each{ edge ->
+              if(edge.from != null && !edge.to.equals(finishStepNodeName)){
+                processDependency getRealNameFromMapping(processStepNameMap, edge.from), targetProcessStepName: getRealNameFromMapping(processStepNameMap, edge.to), {
+                  //todo: need to handle the "VALUE" type correctly
+                  branchType = edge.type == "VALUE" ? "ALWAYS":edge.type
+                }
+              }
+            }
+          }
+
       }
     }
 
   }
 
+}
+
+def getRealNameFromMapping( nameMap, keyName){
+  return nameMap[keyName]?:keyName
 }
 
 def getComponentProcessStepInvokeData(appProcessStep){
