@@ -86,9 +86,8 @@ application myApplicationName, {
             }
           }
 
-          println("" + processStepNameMap)
-
-          //process step dependencies
+          // process step dependencies
+          // println("" + processStepNameMap)
           if ( finishStepNodeName != null ) {
             applicationProcessEdges.each{ edge ->
               if(edge.from != null && !edge.to.equals(finishStepNodeName)){
