@@ -49,6 +49,7 @@ Convert udeploy exported json file to cloudbees CD DSL
                 * environment switch
                 * property switch
             * type:join node logic (maybe not needed)
+        * impersonation in process steps
   6. Environment
         * Environment properties
   6. plugins (most used ones from the top 10 apps)
