@@ -4,7 +4,7 @@ Convert udeploy exported json file to cloudbees CD DSL
 1. export application json file from Udeploy, save it to path/to/\<appname>.json
 2. run ectool --server \<your CD server host name> login <your user name>
 3. run ./udeploy2cloudbeescd.sh \<CD project name> <path/to/appname.json>
-    * example: ./udeploy2cloudbeescd.sh "Holy Proj" top10UdeployApps/COG-Tech-CMD-PTR-Dory.json
+    * example: ./udeploy2cloudbeescd.sh "Holy Proj" top10UdeployApps/Example-App.json
 
 ## supported features
   1. Import application and components, generate application and components process
