@@ -35,7 +35,7 @@ for component in $(cat ${components_file})
 do
   echo "${component//\"/}" > sharedFiles/targetComponent.txt
   echo "processing ${component//\"/}"
-  ectool  evalDsl --dslFile udeploy2cloudbeescdComponent.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
+  #ectool  evalDsl --dslFile udeploy2cloudbeescdComponent.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
   rm -f clientFiles_*.zip
 done
 
