@@ -133,7 +133,7 @@ def updateStepNameMapping( nameMap, processStepData){
       realName = stepChild.name
       break
     default:
-      println "unsupported process step type $stepChild"
+      println "updateStepNameMapping -> unsupported process step type $stepChild"
   }
   nameMap << [ (keyName):(realName) ]
 }

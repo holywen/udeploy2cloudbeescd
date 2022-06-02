@@ -126,7 +126,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 				}
 				break
 			default:
-				println "unsupported component parameter type " + args
+				println "createFormalParameter -> unsupported component parameter type " + args
 			}
 	}
 
@@ -185,7 +185,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createDummyAppProcessStep(contextPath, dummyStep, appTierName){
     println "context path: $contextPath"
-    def outputString =  "            unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
+    def outputString =  "createDummyAppProcessStep -> unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
     if(dummyStep.type.equals("plugin"))
       outputString +=  "->" + dummyStep.pluginName + ":" + dummyStep.commandName
     println outputString
