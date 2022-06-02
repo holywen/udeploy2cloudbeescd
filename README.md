@@ -1,5 +1,10 @@
 # udeploy2cloudbeescd
 Convert udeploy exported json file to cloudbees CD DSL
+## Prerequisites
+1. User need to install ectool
+2. User need to have connectivity to the cloudbees CD server (8443 port)
+3. The .sh scripts are runnign in bash
+
 ## Usage
 1. export application json file from Udeploy, save it to path/to/\<appname>.json
 2. run ectool --server \<your CD server host name> login <your user name>
