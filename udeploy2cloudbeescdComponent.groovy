@@ -38,8 +38,20 @@ application myApplicationName, {
           description = myComponentDesc
           pluginKey = myComponentPlugin
 
-          //component properties
           def componentPropSheets = myComponent.propSheetGroup.propSheets
+
+          //component identification
+          switch(myComponentPlugin){
+            case "EC-Maven":
+              def mavenPropDefs = componentPropSheets.find{it.name == 'MavenComponentProperties'}.properties
+              setMavenComponentID(mavenPropDefs)
+              break;
+            case "EC-Artifactory":
+            case "EC-Artifact":
+              println "unsupported component identification type: $myComponentPlugin"
+          }
+
+          //component properties
           componentPropSheets.each{ componentPropSheet ->
             loadPropertySheet(componentPropSheet.name, componentPropSheet.properties)
           }

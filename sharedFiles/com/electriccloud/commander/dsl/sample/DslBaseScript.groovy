@@ -149,6 +149,29 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		}
 	}
 
+	def setMavenComponentID(args){
+    // println "setMavenComponentID -> " + args
+    def groupId = args.find{it.name == "groupId"}.value
+    def artifactId = args.find{it.name == "artifactId"}.value
+    def qualifier = args.find{it.name ==  "qualifier"}.value
+    def extension = args.find{it.name ==  "extension"}.value
+    def repoUrl = args.find{it.name ==  "repoUrl"}.value
+    repoUrl = repoUrl.endsWith("/") ? repoUrl.substring(0,repoUrl.lastIndexOf('/')): repoUrl
+
+    def repoName = repoUrl.substring(repoUrl.lastIndexOf('/') + 1)
+    def serverUrl = repoUrl.substring(0, repoUrl.lastIndexOf('/'))
+    // println " serverURL: ${serverUrl} repoName: ${repoName}"
+		property 'ec_content_details', {
+			property 'artifact', value: "${groupId}:${artifactId}"
+			classifier = qualifier
+			property 'pluginProjectName', value: 'EC-Maven'
+			property 'repository', value: repoName
+			property 'server', value: serverUrl
+			property 'type', value: extension
+      property 'overwrite', value: '1'
+    }
+	}
+
   def createComponentProcessInvokeStep(args, appName, appTier){
     def allowFailure = args.allowFailure
     // println "process step creation: $args" 
