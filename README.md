@@ -49,7 +49,6 @@ ectool --server <your CD server host name> login <your user name>
 
 ## todo
   1. Application processes
-        * properties
         * Component Process invoke wrapper
             * "allVersionsIterator"
             * "inventoryVersionDiff"
@@ -57,7 +56,6 @@ ectool --server <your CD server host name> login <your user name>
             * "configurationDiff"
   2. Component definition (artifacts id etc)
   3. Components processes
-        * properties
         * process steps dependencies (rootActivity.edges)
             * type:switch node logic
                 * environment switch
