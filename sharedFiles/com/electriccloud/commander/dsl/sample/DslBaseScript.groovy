@@ -78,6 +78,15 @@ abstract class DslBaseScript extends DslDelegatingScript {
 	}
     // end boiler-plate
 
+	def loadPropertySheet(sheetPath, args) {
+		def sheetFullPath = ( sheetPath == null) ? "" : sheetPath + "/"
+		//println "loadPropertySheet -> " + sheetFullPath + " : " +  args
+		args.each{ propItem ->
+			property sheetFullPath + propItem.name, value: propItem.value, {
+				description =  propItem.description
+			}
+		}
+	}
 
 	def createFormalParameter(def args) {
 		switch(args.type){

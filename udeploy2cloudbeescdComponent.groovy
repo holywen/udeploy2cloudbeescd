@@ -38,6 +38,12 @@ application myApplicationName, {
           description = myComponentDesc
           pluginKey = myComponentPlugin
 
+          //component properties
+          def componentPropSheets = myComponent.propSheetGroup.propSheets
+          componentPropSheets.each{ componentPropSheet ->
+            loadPropertySheet(componentPropSheet.name, componentPropSheet.properties)
+          }
+
           //component processes
           def myUdeployComponenProcesses = myComponent.processes
           myUdeployComponenProcesses.each{ myUdeployComponenProcess ->

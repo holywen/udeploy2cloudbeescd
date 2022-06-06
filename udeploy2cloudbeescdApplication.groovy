@@ -19,6 +19,9 @@ application myApplicationName, {
   applicationType = 'traditional'
   projectName = myProjectName
 
+  //properties
+  loadPropertySheet(args.propSheet?.name, args.propSheet?.properties)
+
   //application processes
   myUdeployApplicationProcesses.each{ myUdeployApplicationProcess ->
     if(myUdeployApplicationProcess.name.equals(targetProcess)){
