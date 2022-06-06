@@ -23,7 +23,8 @@ ectool --server <your CD server host name> login <your user name>
 ## supported features
   1. Import application and components, generate application and components process
 ### Details:
-  1. Application processes
+  1. Application properties
+  2. Application processes
         * application process propDefs (parameters)
         * Component Process invoke (componentProcess)
         * Component Process invoke wrapper
@@ -34,29 +35,28 @@ ectool --server <your CD server host name> login <your user name>
 
         * process steps dependencies (rootActivity.edges)
         * process steps (rootActivity.children)
-  2. Components processes
+  3. Component properties
+  4. Components processes
         * Component process propDefs (parameters)
         * process steps dependencies (rootActivity.edges)
         * process steps (rootActivity.children)
             * type:plugin calling steps place holder
             * type:switch node place holder
             * type:join node place holder
-  3. plugins
+  5. plugins
         1. Shell
             * Shell
 
 ## todo
-  1. Application properties
-  2. Application processes
+  1. Application processes
         * properties
         * Component Process invoke wrapper
             * "allVersionsIterator"
             * "inventoryVersionDiff"
             * "componentEnvironmentIterator"
             * "configurationDiff"
-  3. Component definition (artifacts id etc)
-  4. Component properties
-  5. Components processes
+  2. Component definition (artifacts id etc)
+  3. Components processes
         * properties
         * process steps dependencies (rootActivity.edges)
             * type:switch node logic
@@ -64,9 +64,9 @@ ectool --server <your CD server host name> login <your user name>
                 * property switch
             * type:join node logic (maybe not needed)
         * impersonation in process steps
-  6. Environment
+  4. Environment
         * Environment properties
-  6. plugins (most used ones from the top 10 apps)
+  5. plugins (most used ones from the top 10 apps)
         1. File Utils
             *  "Copy Directory"
             *   "Create Directories"
