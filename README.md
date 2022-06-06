@@ -35,6 +35,7 @@ ectool --server <your CD server host name> login <your user name>
 
         * process steps dependencies (rootActivity.edges)
         * process steps (rootActivity.children)
+  2. Component definition (artifacts id etc)
   3. Component properties
   4. Components processes
         * Component process propDefs (parameters)
@@ -54,7 +55,6 @@ ectool --server <your CD server host name> login <your user name>
             * "inventoryVersionDiff"
             * "componentEnvironmentIterator"
             * "configurationDiff"
-  2. Component definition (artifacts id etc)
   3. Components processes
         * process steps dependencies (rootActivity.edges)
             * type:switch node logic
