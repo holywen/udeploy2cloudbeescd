@@ -88,6 +88,8 @@ application myApplicationName, {
                         case "File Utils":
                           switch(compProcessStep.commandName){
                             case "Copy Directory":
+                              createFileUtilCopyDirectoryStep(compProcessStep)
+                              break
                             case "Create Directories":
                             case "Create File":
                             case "Delete Files and Directories":

@@ -187,6 +187,25 @@ abstract class DslBaseScript extends DslDelegatingScript {
     }
   }
 
+	def createFileUtilCopyDirectoryStep(args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def sourceDir = stepProperties.sourceDir
+		def destDir = stepProperties.destDirList
+		def force = stepProperties.force
+		processStep args.name, {
+			actualParameter = [
+				'destinationFile': destDir,
+				'replaceDestinationIfPreexists': (force == "true") ? '1' : '0',
+				'sourceFile': sourceDir,
+			]
+			errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+			processStepType = 'plugin'
+			subprocedure = 'Copy'
+      subproject = '/plugins/EC-FileOps/project'
+		}
+	}
+
 	def createRetrieveArtifactStep(args, myComponentPlugin, myComponentName){
 		switch(myComponentPlugin){
 			case "EC-Maven":
