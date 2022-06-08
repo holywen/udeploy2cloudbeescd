@@ -221,6 +221,39 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		}
 	}
 
+	def createFileUtilCreateFileStep(args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def file = stepProperties.file
+		def contents = stepProperties.contents
+		def overwrite = stepProperties.overwrite
+		def customEncoding = stepProperties.customEncoding
+		// todo: need to update rootActivity.edges for the new _AddContentToFile step
+		processStep args.name, {
+			actualParameter = [
+				'Mode': '0600',
+				'Name': file,
+			]
+			errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+			processStepType = 'plugin'
+			subprocedure = 'CreateEmptyFile'
+      subproject = '/plugins/EC-FileOps/project'
+		}
+
+		processStep args.name + "_AddContentToFile", {
+			actualParameter = [
+				'AddNewLine': '1',
+				'Append': (overwrite == "true") ? '0' : '1',
+				'Content': contents,
+				'Path': file,
+			]
+			errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+			processStepType = 'plugin'
+			subprocedure = 'AddTextToFile'
+      subproject = '/plugins/EC-FileOps/project'
+		}
+	}
+
 	def createRetrieveArtifactStep(args, myComponentPlugin, myComponentName){
 		switch(myComponentPlugin){
 			case "EC-Maven":
