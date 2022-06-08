@@ -206,6 +206,21 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		}
 	}
 
+	def createFileUtilCreateDirectoryStep(args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def dir = stepProperties.dir
+		processStep args.name, {
+			actualParameter = [
+				'Path': dir,
+			]
+			errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+			processStepType = 'plugin'
+			subprocedure = 'CreateDirectory'
+      subproject = '/plugins/EC-FileOps/project'
+		}
+	}
+
 	def createRetrieveArtifactStep(args, myComponentPlugin, myComponentName){
 		switch(myComponentPlugin){
 			case "EC-Maven":

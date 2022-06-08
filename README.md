@@ -53,6 +53,7 @@ ectool --server <your CD server host name> login <your user name>
             * "Download Artifacts"
         1. File Utils
             *   "Copy Directory"
+            *   "Create Directories"
 ## todo
   1. Application processes
         * Component Process invoke wrapper
@@ -71,7 +72,6 @@ ectool --server <your CD server host name> login <your user name>
         * Environment properties
   5. plugins (most used ones from the top 10 apps)
         1. File Utils
-            *   "Create Directories"
             *   "Create File"
             *   "Delete Files and Directories“
             *   "Flip Line Endings"
