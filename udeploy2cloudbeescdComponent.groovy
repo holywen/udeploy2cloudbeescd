@@ -82,6 +82,9 @@ application myApplicationName, {
                         case "Shell":
                           createShellStep(compProcessStep)
                           break
+                        case "Groovy":
+                          createGroovyStep(compProcessStep)
+                          break
                         case "File Utils":
                           switch(compProcessStep.commandName){
                             case "Copy Directory":

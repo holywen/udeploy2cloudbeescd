@@ -185,6 +185,24 @@ abstract class DslBaseScript extends DslDelegatingScript {
     }
   }
 
+  def createGroovyStep(def args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def scriptBody = stepProperties.scriptBody
+		//todo: fix impersonation
+    //println "Groovy plugin: $commandName ${args.name}"
+		processStep args.name, {
+      actualParameter = [
+        'commandToRun': scriptBody,
+        'shellToUse': 'ec-groovy',
+      ]
+      errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+      processStepType = 'command'
+      subprocedure = 'RunCommand'
+      subproject = '/plugins/EC-Core/project'
+    }
+  }
+
   def createShellStep(def args){
     def useImpersonation = args.useImpersonation
     def allowFailure = args.allowFailure

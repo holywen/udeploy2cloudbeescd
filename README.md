@@ -47,6 +47,8 @@ ectool --server <your CD server host name> login <your user name>
   5. plugins
         1. Shell
             * Shell
+        2. Groovy:
+            * "Run Groovy Script"
 
 ## todo
   1. Application processes
@@ -76,8 +78,6 @@ ectool --server <your CD server host name> login <your user name>
             *   "Untar Tarball"
             *   "Unzip"
             *   "Update XML File with XPath"
-        2. Groovy:
-            * "Run Groovy Script"
         3. Linux System Tools:
             * "Set file permissions"
         4. "UrbanCode Deploy Configuration Management“
