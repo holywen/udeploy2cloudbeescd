@@ -91,7 +91,11 @@ application myApplicationName, {
                               createFileUtilCopyDirectoryStep(compProcessStep)
                               break
                             case "Create Directories":
+                              createFileUtilCreateDirectoryStep(compProcessStep)
+                              break
                             case "Create File":
+                              createFileUtilCreateFileStep(compProcessStep)
+                              break
                             case "Delete Files and Directories":
                             case "Flip Line Endings":
                             case "Move Directory":
