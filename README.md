@@ -49,7 +49,8 @@ ectool --server <your CD server host name> login <your user name>
             * Shell
         2. Groovy:
             * "Run Groovy Script"
-
+        5. "UrbanCode Deploy Versioned File Storage"
+            * "Download Artifacts"
 ## todo
   1. Application processes
         * Component Process invoke wrapper
@@ -68,7 +69,7 @@ ectool --server <your CD server host name> login <your user name>
         * Environment properties
   5. plugins (most used ones from the top 10 apps)
         1. File Utils
-            *  "Copy Directory"
+            *   "Copy Directory"
             *   "Create Directories"
             *   "Create File"
             *   "Delete Files and Directories“
@@ -82,8 +83,6 @@ ectool --server <your CD server host name> login <your user name>
             * "Set file permissions"
         4. "UrbanCode Deploy Configuration Management“
             * "Install Template"
-        5. "UrbanCode Deploy Versioned File Storage"
-            * "Download Artifacts"
         6. General Utilities
             * Wait
         7. Service Control Manager:

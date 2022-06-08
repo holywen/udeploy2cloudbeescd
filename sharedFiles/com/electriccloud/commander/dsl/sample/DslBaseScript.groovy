@@ -169,6 +169,8 @@ abstract class DslBaseScript extends DslDelegatingScript {
 			property 'server', value: serverUrl
 			property 'type', value: extension
       property 'overwrite', value: '1'
+			pluginProcedure = 'Retrieve Artifact'
+			resultProperty = '/myJob/retrievedArtifactVersions/$[assignedResourceName]'
     }
 	}
 
@@ -184,6 +186,50 @@ abstract class DslBaseScript extends DslDelegatingScript {
       subcomponentProcess = args.componentProcessName
     }
   }
+
+	def createRetrieveArtifactStep(args, myComponentPlugin, myComponentName){
+		switch(myComponentPlugin){
+			case "EC-Maven":
+				processStep args.name, {
+					actualParameter = [
+            'artifact': '$[/myComponent/ec_content_details/artifact]',
+            'classifier': '$[/myComponent/ec_content_details/classifier]',
+            'config': '$[/myComponent/ec_content_details/config]',
+            'directory': '$[/myComponent/ec_content_details/directory]',
+            'overwrite': '$[/myComponent/ec_content_details/overwrite]',
+            'repository': '$[/myComponent/ec_content_details/repository]',
+            'resultProperty': '$[/myComponent/ec_content_details/resultProperty]',
+            'server': '$[/myComponent/ec_content_details/server]',
+            'type': '$[/myComponent/ec_content_details/type]',
+            'version': '$[/myJob/ec_' + myComponentName +'-version]',
+          ]
+					processStepType = 'component'
+					subprocedure = 'Retrieve Artifact'
+          subproject = '/plugins/EC-Maven/project'
+				}
+				break
+			case "EC-Artifact":
+				processStep args.name, {
+					actualParameter = [
+            'artifactName': '$[/myComponent/ec_content_details/artifactName]',
+            'artifactVersionLocationProperty': '$[/myComponent/ec_content_details/artifactVersionLocationProperty]',
+            'filterList': '$[/myComponent/ec_content_details/filterList]',
+            'overwrite': '$[/myComponent/ec_content_details/overwrite]',
+            'retrieveToDirectory': '$[/myComponent/ec_content_details/retrieveToDirectory]',
+            'versionRange': '$[/myJob/ec_' + myComponentName +'-version]',
+          ]
+					processStepType = 'component'
+					subprocedure = 'Retrieve'
+          subproject = '/plugins/EC-Artifact/project'
+				}
+				break
+			case "EC-Artifactory":
+				//todo implement EC-Artifactory
+			default:
+				createDummyCompProcessStep("createRetrieveArtifactStep ->", args)
+				break
+		}
+	}
 
   def createGroovyStep(def args){
 		def allowFailure = args.allowFailure

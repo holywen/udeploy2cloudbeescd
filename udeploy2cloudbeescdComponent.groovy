@@ -101,6 +101,15 @@ application myApplicationName, {
                               createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
                           }
                           break
+                        case "UrbanCode Deploy Versioned File Storage":
+                          switch(compProcessStep.commandName){
+                            case "Download Artifacts":
+                              createRetrieveArtifactStep(compProcessStep, myComponentPlugin, myUdeployComponentName)
+                              break
+                            default:
+                              createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                          }
+                          break
 
                         default:
                           createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)

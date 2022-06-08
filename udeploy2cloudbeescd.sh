@@ -38,7 +38,7 @@ do
   ectool  evalDsl --dslFile udeploy2cloudbeescdComponent.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
   rm -f clientFiles_*.zip
 done
-
+exit 0
 for process in $(cat ${app_processes_file})
 do
   echo "${process//\"/}" > sharedFiles/targetProcess.txt
