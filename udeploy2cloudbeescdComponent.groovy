@@ -94,7 +94,7 @@ application myApplicationName, {
                               createFileUtilCreateDirectoryStep(compProcessStep)
                               break
                             case "Create File":
-                              createFileUtilCreateFileStep(compProcessStep)
+                              createFileUtilCreateFileStep(compProcessStep, componentProcessEdges)
                               break
                             case "Delete Files and Directories":
                             case "Flip Line Endings":

@@ -221,7 +221,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		}
 	}
 
-	def createFileUtilCreateFileStep(args){
+	def createFileUtilCreateFileStep(args, activityEdges){
 		def allowFailure = args.allowFailure
 		def stepProperties = args.properties
 		def file = stepProperties.file
@@ -240,7 +240,8 @@ abstract class DslBaseScript extends DslDelegatingScript {
       subproject = '/plugins/EC-FileOps/project'
 		}
 
-		processStep args.name + "_AddContentToFile", {
+		def newStepName = args.name + "_AddContentToFile"
+		processStep newStepName, {
 			actualParameter = [
 				'AddNewLine': '1',
 				'Append': (overwrite == "true") ? '0' : '1',
@@ -252,6 +253,19 @@ abstract class DslBaseScript extends DslDelegatingScript {
 			subprocedure = 'AddTextToFile'
       subproject = '/plugins/EC-FileOps/project'
 		}
+
+		activityEdgesInsertAfter(activityEdges, args.name, newStepName)
+	}
+
+	def activityEdgesInsertAfter(activityEdges, nodeName, newNodeName){
+		//println "edges before update:" + activityEdges
+		def currentEdge = activityEdges.find{it.from == nodeName}
+		def currentToNode = currentEdge.to
+
+		activityEdges.removeIf{it.from == nodeName}
+		activityEdges << ["from":nodeName, "to": newNodeName, "type": currentEdge.type, "value": currentEdge.value] 
+		activityEdges << ["from":newNodeName, "to": currentToNode, "type": "SUCCESS", "value": ""]
+		//println "update edges:" + activityEdges
 	}
 
 	def createRetrieveArtifactStep(args, myComponentPlugin, myComponentName){
