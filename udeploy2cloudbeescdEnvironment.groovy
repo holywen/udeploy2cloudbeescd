@@ -27,7 +27,7 @@ myUdeployEnvironments.each { myUdeployEnvironment ->
       projectName = myProjectName
 
       //properties
-      loadPropertySheet(args.propSheet?.name, args.propSheet?.properties)
+      loadPropertySheet(myUdeployEnvironment.propSheet?.name, myUdeployEnvironment.propSheet?.properties)
 
       //component properties sheets
       def componentPropSheets = myUdeployEnvironment.componentPropSheets
