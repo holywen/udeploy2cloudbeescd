@@ -44,6 +44,8 @@ ectool --server <your CD server host name> login <your user name>
             * type:plugin calling steps place holder
             * type:switch node place holder
             * type:join node place holder
+  4. Environment
+        * Environment properties
   5. plugins
         1. Shell
             * Shell
@@ -71,10 +73,8 @@ ectool --server <your CD server host name> login <your user name>
             * type:switch node logic // if we have time
                 * environment switch
                 * property switch
-            * type:join node logic (maybe not needed) 
+            * type:join node logic (maybe not needed)
         * impersonation in process steps
-  4. Environment
-        * Environment properties //
   5. plugins (most used ones from the top 10 apps)
         1. File Utils
             *   "Flip Line Endings"
