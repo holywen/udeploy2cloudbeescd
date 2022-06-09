@@ -55,6 +55,9 @@ ectool --server <your CD server host name> login <your user name>
             *   "Copy Directory"
             *   "Create Directories"
             *   "Create File"
+            *   "Delete Files and Directories“
+            *   "Unzip"
+            *   "Untar Tarball"
 ## todo
   1. Application processes
         * Component Process invoke wrapper
@@ -64,21 +67,18 @@ ectool --server <your CD server host name> login <your user name>
             * "configurationDiff"
   3. Components processes
         * process steps dependencies (rootActivity.edges)
-            * type:switch node logic
+            * type:switch node logic // if we have time
                 * environment switch
                 * property switch
-            * type:join node logic (maybe not needed)
+            * type:join node logic (maybe not needed) 
         * impersonation in process steps
   4. Environment
-        * Environment properties
+        * Environment properties //
   5. plugins (most used ones from the top 10 apps)
         1. File Utils
-            *   "Delete Files and Directories“
             *   "Flip Line Endings"
             *   "Move Directory"
             *   "Replace Tokens"
-            *   "Untar Tarball"
-            *   "Unzip"
             *   "Update XML File with XPath"
         3. Linux System Tools:
             * "Set file permissions"

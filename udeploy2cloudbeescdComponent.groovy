@@ -97,11 +97,17 @@ application myApplicationName, {
                               createFileUtilCreateFileStep(compProcessStep, componentProcessEdges)
                               break
                             case "Delete Files and Directories":
+                              createFileUtilDeleteFilesandDirectoriesStep(compProcessStep)
+                              break
+                            case "Unzip":
+                              createFileUtilUnzipStep(compProcessStep)
+                              break
+                            case "Untar Tarball":
+                              createFileUtilUntarTarballStep(compProcessStep)
+                              break
                             case "Flip Line Endings":
                             case "Move Directory":
                             case "Replace Tokens":
-                            case "Untar Tarball":
-                            case "Unzip":
                             case "Update XML File with XPath":
                             default:
                               createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
@@ -145,11 +151,8 @@ application myApplicationName, {
                 }
             }
           }
-
-
         }
       }
-
     }
   }
 }

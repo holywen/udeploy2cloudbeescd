@@ -206,6 +206,71 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		}
 	}
 
+	def createFileUtilDeleteFilesandDirectoriesStep(args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def includes = stepProperties.includes
+		def excludes = stepProperties.excludes
+		def baseDir = stepProperties.baseDir
+
+		def procedureToCall = includes == "**/*" ? "DeleteDirectory" : "DeleteFile"
+		processStep args.name, {
+			if(procedureToCall == "DeleteDirectory"){
+				actualParameter = [
+					'Path': baseDir,
+					'Recursive': '1',
+				]
+			} else {
+				actualParameter = [
+					'Path': baseDir + includes,
+				]
+			}
+			errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+			processStepType = 'plugin'
+			subprocedure = procedureToCall
+      subproject = '/plugins/EC-FileOps/project'
+		}
+	}
+
+	def createFileUtilUnzipStep(args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def destDir = stepProperties.dir
+		def zipFile = stepProperties.zip
+
+		processStep args.name, {
+			actualParameter = [
+            'destinationDir': destDir,
+            'zipFile': zipFile,
+          ]
+			errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+			processStepType = 'plugin'
+			subprocedure = 'Unzip File'
+      subproject = '/plugins/EC-FileOps/project'
+		}
+	}
+
+	def createFileUtilUntarTarballStep(args){
+		def allowFailure = args.allowFailure
+		def stepProperties = args.properties
+		def destDir = stepProperties.dir.toString()
+		def tarFile = stepProperties.tarball.toString()
+		def compression = stepProperties.compression
+		def overwrite = stepProperties.overwrite
+
+		processStep args.name, {
+      actualParameter = [
+        'commandToRun': "tar xvf '" + tarFile + "' --directory '" + destDir + "'",
+        'shellToUse': '',
+      ]
+      workingDirectory = ''
+      errorHandling = (allowFailure == true) ? 'failProcedure' : 'abortJob'
+      processStepType = 'command'
+      subprocedure = 'RunCommand'
+      subproject = '/plugins/EC-Core/project'
+    }
+	}
+
 	def createFileUtilCreateDirectoryStep(args){
 		def allowFailure = args.allowFailure
 		def stepProperties = args.properties
@@ -254,10 +319,10 @@ abstract class DslBaseScript extends DslDelegatingScript {
       subproject = '/plugins/EC-FileOps/project'
 		}
 
-		activityEdgesInsertAfter(activityEdges, args.name, newStepName)
+		insertNodeAfter(activityEdges, args.name, newStepName)
 	}
 
-	def activityEdgesInsertAfter(activityEdges, nodeName, newNodeName){
+	def insertNodeAfter(activityEdges, nodeName, newNodeName){
 		//println "edges before update:" + activityEdges
 		def currentEdge = activityEdges.find{it.from == nodeName}
 		def currentToNode = currentEdge.to
