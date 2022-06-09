@@ -1,6 +1,6 @@
 components.txt
 processes.txt
-environment.txt
+environments.txt
 sharedFiles/config.json
 sharedFiles/target*.txt
 top10UdeployApps/
