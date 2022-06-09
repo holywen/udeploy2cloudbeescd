@@ -293,7 +293,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 		def contents = stepProperties.contents
 		def overwrite = stepProperties.overwrite
 		def customEncoding = stepProperties.customEncoding
-		// todo: need to update rootActivity.edges for the new _AddContentToFile step
+
 		processStep args.name, {
 			actualParameter = [
 				'Mode': '0600',
