@@ -12,6 +12,7 @@ fi
 
 components_file=components.txt
 app_processes_file=processes.txt
+environments_file=environments.txt
 
 project_name=$1
 param_filename=$2
@@ -30,6 +31,10 @@ if [ ! -f "${app_processes_file}" ]; then
   jq '.processes [] | .name' ${param_filename} > ${app_processes_file}
 fi
 
+if [ ! -f "${environments_file}" ]; then
+  jq '.environments [] | .name' ${param_filename} > ${environments_file}
+fi
+
 IFS=$'\n'
 for component in $(cat ${components_file})
 do
@@ -43,5 +48,12 @@ for process in $(cat ${app_processes_file})
 do
   echo "${process//\"/}" > sharedFiles/targetProcess.txt
   ectool  evalDsl --dslFile udeploy2cloudbeescdApplication.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
+  rm -f clientFiles_*.zip
+done
+
+for environment in $(cat ${environments_file})
+do
+  echo "${environment//\"/}" > sharedFiles/targetEnvironment.txt
+  ectool  evalDsl --dslFile udeploy2cloudbeescdEnvironment.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
   rm -f clientFiles_*.zip
 done

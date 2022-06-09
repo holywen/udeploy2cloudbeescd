@@ -1,8 +1,8 @@
 components.txt
 processes.txt
+environment.txt
 sharedFiles/config.json
-sharedFiles/targetComponent.txt
-sharedFiles/targetProcess.txt
+sharedFiles/target*.txt
 top10UdeployApps/
 top10UdeployAppsPluginUsage.txt
 clientFiles*.zip
