@@ -56,6 +56,7 @@ ectool --server <your CD server host name> login <your user name>
             *   "Create Directories"
             *   "Create File"
             *   "Delete Files and Directories“
+             (note: conversion is not working if there are multiple files need to be deleted or wild cards '*' is used.)
             *   "Unzip"
             *   "Untar Tarball"
 ## todo
