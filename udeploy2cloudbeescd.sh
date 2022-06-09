@@ -1,3 +1,4 @@
+#/bin/bash
 set -x
 usage () {
     cat <<HELP_USAGE
@@ -23,37 +24,32 @@ cat  << EOF > sharedFiles/config.json
 }
 EOF
 
-if [ ! -f "${components_file}" ]; then
-  jq '.components [] | .name' ${param_filename} > ${components_file}
-fi
+generate_element_list_file () {
+  # $1 type: components/processes/environments, $2 list file, $3 json file
+  if [ ! -f "$2" ]; then
+    jq ".$1 [] | .name" $3 > $2
+  fi
+}
 
-if [ ! -f "${app_processes_file}" ]; then
-  jq '.processes [] | .name' ${param_filename} > ${app_processes_file}
-fi
+generate_element_list_file "components" "${components_file}" "${param_filename}"
+generate_element_list_file "processes" "${app_processes_file}" "${param_filename}"
+generate_element_list_file "environments" "${environments_file}" "${param_filename}"
 
-if [ ! -f "${environments_file}" ]; then
-  jq '.environments [] | .name' ${param_filename} > ${environments_file}
-fi
+run_migration_script () {
+  OLD_IFS=$IFS
+  IFS=$'\n'
+  # $1 target data file, $2 list file, $3 script file, $4 parameter json file
 
-IFS=$'\n'
-for component in $(cat ${components_file})
-do
-  echo "${component//\"/}" > sharedFiles/targetComponent.txt
-  echo "processing ${component//\"/}"
-  ectool  evalDsl --dslFile udeploy2cloudbeescdComponent.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
-  rm -f clientFiles_*.zip
-done
-#exit 0
-for process in $(cat ${app_processes_file})
-do
-  echo "${process//\"/}" > sharedFiles/targetProcess.txt
-  ectool  evalDsl --dslFile udeploy2cloudbeescdApplication.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
-  rm -f clientFiles_*.zip
-done
+  for item in $(cat ${2})
+  do
+    echo "${item//\"/}" > sharedFiles/$1
+    echo "processing ${item//\"/}"
+    ectool  evalDsl --dslFile $3 --clientFiles ./sharedFiles --parametersFile ${4} --overwrite 0
+    rm -f clientFiles_*.zip
+  done
+  IFS=${OLD_IFS}
+}
 
-for environment in $(cat ${environments_file})
-do
-  echo "${environment//\"/}" > sharedFiles/targetEnvironment.txt
-  ectool  evalDsl --dslFile udeploy2cloudbeescdEnvironment.groovy --clientFiles ./sharedFiles --parametersFile ${param_filename} --overwrite 0
-  rm -f clientFiles_*.zip
-done
+run_migration_script "targetComponent.txt" "${components_file}" "udeploy2cloudbeescdComponent.groovy" "${param_filename}"
+run_migration_script "targetProcess.txt" "${app_processes_file}" "udeploy2cloudbeescdApplication.groovy" "${param_filename}"
+run_migration_script "targetEnvironment.txt" "${environments_file}" "udeploy2cloudbeescdEnvironment.groovy" "${param_filename}"
