@@ -53,35 +53,10 @@ application myApplicationName, {
               case "componentProcess":
                 createComponentProcessInvokeStep(appProcessStep, myApplicationName,  myAppTier)
                 break
-              case "plugin":
-                switch(appProcessStep.pluginName){
-                  case "Shell":
-                    createShellStep(appProcessStep)
-                    break
-                  case "File Utils":
-                    switch(appProcessStep.commandName){
-                      case "Copy Directory":
-                      case "Create Directories":
-                      case "Create File":
-                      case "Delete Files and Directories":
-                      case "Flip Line Endings":
-                      case "Move Directory":
-                      case "Replace Tokens":
-                      case "Untar Tarball":
-                      case "Unzip":
-                      case "Update XML File with XPath":
-                      default:
-                        createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
-                    }
-                    break
-
-                  default:
-                    createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
-                }
-                break
               case "finish":
                 //do nothing
                 break;
+              case "plugin":
               case "switch":
               case "join":
               default:
