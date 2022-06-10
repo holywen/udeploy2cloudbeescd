@@ -72,13 +72,32 @@ application myApplicationName, {
                 def componentProcessEdges = componentProcessRootActivity?.edges
                 def componentProcessSteps = componentProcessRootActivity?.children
 
-                def finishStepNodeName = componentProcessSteps.find{ it.type == 'finish'}.name
+                def finishStepNodeNames = componentProcessSteps.findAll{ it.type == 'finish'}?.collect { it.name }
+                // println "finishStepNodeNames: " + finishStepNodeNames
 
                 //process steps
                 componentProcessSteps.each{ compProcessStep ->
                   switch(compProcessStep.type){
                     case "plugin":
                       switch(compProcessStep.pluginName){
+                        case "Linux System Tools":
+                          switch(compProcessStep.commandName){
+                            case "Set file permissions":
+                              createLinuxSystemToolsSetFilePermissionsStep(compProcessStep)
+                              break
+                            default:
+                              createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                          }
+                          break
+                        case "General Utilities":
+                          switch(compProcessStep.commandName){
+                            case "Wait":
+                              createGeneralUtilitiesWaitStep(compProcessStep)
+                              break
+                            default:
+                              createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                          }
+                          break
                         case "Shell":
                           createShellStep(compProcessStep)
                           break
@@ -105,8 +124,10 @@ application myApplicationName, {
                             case "Untar Tarball":
                               createFileUtilUntarTarballStep(compProcessStep)
                               break
-                            case "Flip Line Endings":
                             case "Move Directory":
+                              createFileUtilMoveDirectoryStep(compProcessStep)
+                              break
+                            case "Flip Line Endings":
                             case "Replace Tokens":
                             case "Update XML File with XPath":
                             default:
@@ -141,10 +162,10 @@ application myApplicationName, {
                 //process step dependencies
                 if ( finishStepNodeName != null ) {
                   componentProcessEdges.each{ edge ->
-                    if(edge.from != null && !edge.to.equals(finishStepNodeName)){
+                    if(edge.from != null && !finishStepNodeNames.contains(edge.to)){
                       processDependency edge.from , targetProcessStepName: edge.to, {
                         //todo: need to handle the "VALUE" type correctly
-                        branchType = edge.type == "VALUE" ? "ALWAYS":edge.type
+                        branchType = convertBranchType(edge.type)
                       }
                     }
                   }

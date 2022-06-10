@@ -58,9 +58,15 @@ ectool --server <your CD server host name> login <your user name>
             *   "Create Directories"
             *   "Create File"
             *   "Delete Files and Directories“
-             (note: conversion is not working if there are multiple files need to be deleted or wild cards '*' is used.)
+             (Note: conversion is not working if there are multiple files need to be deleted or wild cards '*' is used.)
             *   "Unzip"
             *   "Untar Tarball"
+            *   "Move Directory"
+        3. Linux System Tools:
+            * "Set file permissions"
+             (Note: conversion is not working if there are multiple files need to be updated or wild cards '*' is used.)
+        6. General Utilities
+            * Wait
 ## todo
   1. Application processes
         * Component Process invoke wrapper
@@ -78,15 +84,10 @@ ectool --server <your CD server host name> login <your user name>
   5. plugins (most used ones from the top 10 apps)
         1. File Utils
             *   "Flip Line Endings"
-            *   "Move Directory"
             *   "Replace Tokens"
             *   "Update XML File with XPath"
-        3. Linux System Tools:
-            * "Set file permissions"
         4. "UrbanCode Deploy Configuration Management“
             * "Install Template"
-        6. General Utilities
-            * Wait
         7. Service Control Manager:
             * Check If Service Exists
             * Delete Service
