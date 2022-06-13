@@ -388,7 +388,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
             'resultProperty': '$[/myComponent/ec_content_details/resultProperty]',
             'server': '$[/myComponent/ec_content_details/server]',
             'type': '$[/myComponent/ec_content_details/type]',
-            'version': '$[/myJob/ec_' + myComponentName +'-version]',
+            'version': '$[/myJob/' + myComponentName +'-version]',
           ]
           processStepType = 'component'
           subprocedure = 'Retrieve Artifact'
@@ -403,7 +403,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
             'filterList': '$[/myComponent/ec_content_details/filterList]',
             'overwrite': '$[/myComponent/ec_content_details/overwrite]',
             'retrieveToDirectory': '$[/myComponent/ec_content_details/retrieveToDirectory]',
-            'versionRange': '$[/myJob/ec_' + myComponentName +'-version]',
+            'versionRange': '$[/myJob/' + myComponentName +'-version]',
           ]
           processStepType = 'component'
           subprocedure = 'Retrieve'
