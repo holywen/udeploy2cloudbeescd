@@ -67,11 +67,18 @@ application myApplicationName, {
           // process step dependencies
           // println("" + processStepNameMap)
           if ( finishStepNodeName != null ) {
+            convertSwitchNodesEdges(applicationProcessSteps, applicationProcessEdges)
             applicationProcessEdges.each{ edge ->
               if(edge.from != null && !edge.to.equals(finishStepNodeName)){
                 processDependency getRealNameFromMapping(processStepNameMap, edge.from), targetProcessStepName: getRealNameFromMapping(processStepNameMap, edge.to), {
-                  //todo: need to handle the "VALUE" type correctly
-                  branchType = edge.type == "VALUE" ? "ALWAYS":edge.type
+                  branchType = convertBranchType(edge.type)
+                  if(edge.type == "VALUE"){
+                    // println "edge.branchCondition: " + edge.branchCondition
+                    // println "edge.branchConditionName: " + edge.branchConditionName
+                    branchCondition = edge.branchCondition
+                    branchConditionName = edge.branchConditionName
+                    branchConditionType = 'CUSTOM'
+                  }
                 }
               }
             }

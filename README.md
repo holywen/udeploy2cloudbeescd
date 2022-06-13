@@ -40,6 +40,10 @@ ectool --server <your CD server host name> login <your user name>
   4. Components processes
         * Component process propDefs (parameters)
         * process steps dependencies (rootActivity.edges)
+            * type:switch node logic
+                * environment switch
+                * property switch
+            * type:join node logic
         * process steps (rootActivity.children)
             * type:plugin calling steps place holder
             * type:switch node place holder
@@ -75,11 +79,6 @@ ectool --server <your CD server host name> login <your user name>
             * "componentEnvironmentIterator"
             * "configurationDiff"
   3. Components processes
-        * process steps dependencies (rootActivity.edges)
-            * type:switch node logic // if we have time
-                * environment switch
-                * property switch
-            * type:join node logic (maybe not needed)
         * impersonation in process steps
   5. plugins (most used ones from the top 10 apps)
         1. File Utils

@@ -151,9 +151,9 @@ application myApplicationName, {
                     case "finish":
                       //do nothing
                       break;
+                    case "switch":
                     case "join":
                       //do nothing but create a dummy step
-                    case "switch":
                     default:
                       createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
                   }
@@ -162,11 +162,18 @@ application myApplicationName, {
 
                 //process step dependencies
                 if ( finishStepNodeName != null ) {
+                  convertSwitchNodesEdges(componentProcessSteps, componentProcessEdges)
                   componentProcessEdges.each{ edge ->
                     if(edge.from != null && !finishStepNodeNames.contains(edge.to)){
                       processDependency edge.from , targetProcessStepName: edge.to, {
-                        //todo: need to handle the "VALUE" type correctly for environment/property switch nodes
                         branchType = convertBranchType(edge.type)
+                        if(edge.type == "VALUE"){
+                          // println "edge.branchCondition: " + edge.branchCondition
+                          // println "edge.branchConditionName: " + edge.branchConditionName
+                          branchCondition = edge.branchCondition
+                          branchConditionName = edge.branchConditionName
+                          branchConditionType = 'CUSTOM'
+                        }
                       }
                     }
                   }

@@ -489,6 +489,39 @@ abstract class DslBaseScript extends DslDelegatingScript {
     }
   }
 
+	// convert switch node and edges to CUSTOM branch conditions
+	def convertSwitchNodesEdges(componentProcessSteps, componentProcessEdges){
+		def switchNodes = componentProcessSteps.findAll{it.type == "switch"}
+		switchNodes.each{ switchNode ->
+			def switchNodeName = switchNode.name
+			def switchNodePropertyName = switchNode.propertyName
+
+			def switchEdges = componentProcessEdges.findAll{it.from == switchNodeName}
+			switchEdges.each{ switchEdge ->
+				def switchEdgeValue = switchEdge.value
+				def switchNodePropertyValueList = switchEdgeValue.split("\n")
+				if(switchNodePropertyName.startsWith("environment.")){
+					def environmentPropName = switchNodePropertyName.replace("environment.", "")
+					def ifExpression = switchNodePropertyValueList.collect {
+						 '"$[/myEnvironment/'	+ environmentPropName + ']" == "' + it + '"'
+						}.join(" || ")
+					def edgeBranchCondition = 'if ( ' + ifExpression + ' ) { true } else { false }'
+					def edgeBranchConditionName = switchNodePropertyName + "-" + switchNodePropertyValueList.join("-")
+					// println "edgeBranchCondition: " + edgeBranchCondition
+					switchEdge.branchCondition = edgeBranchCondition
+					switchEdge.branchConditionName = edgeBranchConditionName
+				} else {
+					def ifExpression = 'getProperty("'	+ switchNodePropertyName + '") == "' + switchEdgeValue + '"'
+					def edgeBranchCondition = '$[/javascript if ( ' + ifExpression + ' ) { true } else { false }]'
+					def edgeBranchConditionName = switchNodePropertyName + "-" + switchEdgeValue
+					// println "edgeBranchCondition: " + edgeBranchCondition
+					switchEdge.branchCondition = edgeBranchCondition
+					switchEdge.branchConditionName = edgeBranchConditionName
+				}
+			}
+		}
+	}
+
   def createDummyCompProcessStep(contextPath, dummyStep ){
     createDummyAppProcessStep(contextPath, dummyStep, null)
   }
