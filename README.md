@@ -27,6 +27,7 @@ ectool --server <your CD server host name> login <your user name>
   2. Application processes
         * application process propDefs (parameters)
         * Component Process invoke (componentProcess)
+        * Application process Manual Task (applicationManualTask)
         * Component Process invoke wrapper
             * "allVersionsIterator" place holder
             * "inventoryVersionDiff" place holder
