@@ -53,6 +53,9 @@ application myApplicationName, {
               case "componentProcess":
                 createComponentProcessInvokeStep(appProcessStep, myApplicationName,  myAppTier)
                 break
+              case "applicationManualTask":
+                createApplicationManualTaskStep(appProcessStep)
+                break
               case "finish":
                 //do nothing
                 break;

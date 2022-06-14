@@ -526,6 +526,21 @@ abstract class DslBaseScript extends DslDelegatingScript {
     createDummyAppProcessStep(contextPath, dummyStep, null)
   }
 
+	def createApplicationManualTaskStep(args){
+		processStep args.name, {
+      actionLabelText = null
+      notificationEnabled = '1'
+      notificationTemplate = 'ec_default_manual_process_step_notification_template'
+      processStepType = 'manual'
+			args.propDefs.each {
+				createFormalParameter(it)
+			}
+      assignee = [
+        'Everyone',
+      ]
+    }
+	}
+
   def createDummyAppProcessStep(contextPath, dummyStep, appTierName){
     println "context path: $contextPath"
     def outputString =  "createDummyAppProcessStep -> unsupported component process step name: ${dummyStep.name} type: ${dummyStep.type}"
