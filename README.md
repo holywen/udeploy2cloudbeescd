@@ -72,6 +72,13 @@ ectool --server <your CD server host name> login <your user name>
              (Note: conversion is not working if there are multiple files need to be updated or wild cards '*' is used.)
         6. General Utilities
             * Wait
+        7. Service Control Manager:
+            * Check If Service Exists
+            * Delete Service
+            * Disable Service
+            * Enable Service"
+            * Start Service"
+            * Stop Service"
 ## todo
   1. Application processes
         * Component Process invoke wrapper
@@ -88,10 +95,3 @@ ectool --server <your CD server host name> login <your user name>
             *   "Update XML File with XPath"
         4. "UrbanCode Deploy Configuration Management“
             * "Install Template"
-        7. Service Control Manager:
-            * Check If Service Exists
-            * Delete Service
-            * Disable Service
-            * Enable Service"
-            * Start Service"
-            * Stop Service"
