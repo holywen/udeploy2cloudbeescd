@@ -15,6 +15,8 @@ components_file=components.txt
 app_processes_file=processes.txt
 environments_file=environments.txt
 
+rm -f $components_file $app_processes_file $environments_file
+
 project_name=$1
 param_filename=$2
 
