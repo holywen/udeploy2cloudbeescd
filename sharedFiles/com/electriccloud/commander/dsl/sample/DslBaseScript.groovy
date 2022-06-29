@@ -5,6 +5,8 @@ import com.electriccloud.commander.dsl.DslDelegate
 import com.electriccloud.commander.dsl.DslDelegatingScript
 import java.util.logging.Logger
 import groovy.json.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 abstract class DslBaseScript extends DslDelegatingScript {
 
@@ -189,7 +191,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilCopyDirectoryStep(args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def sourceDir = stepProperties.sourceDir
     def destDir = stepProperties.destDirList
     def force = stepProperties.force
@@ -208,7 +210,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilDeleteFilesandDirectoriesStep(args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def includes = stepProperties.includes
     def excludes = stepProperties.excludes
     def baseDir = stepProperties.baseDir
@@ -234,7 +236,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createLinuxSystemToolsSetFilePermissionsStep(args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def file = stepProperties.includes
     def mode = stepProperties.mod
 
@@ -255,7 +257,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilMoveDirectoryStep(args) {
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def sourceDir = stepProperties.sourceDir
     def includes = stepProperties.includes
     def destDir = stepProperties.destDir
@@ -275,7 +277,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilUnzipStep(args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def destDir = stepProperties.dir
     def zipFile = stepProperties.zip
 
@@ -293,7 +295,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilUntarTarballStep(args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def destDir = stepProperties.dir.toString()
     def tarFile = stepProperties.tarball.toString()
     def compression = stepProperties.compression
@@ -314,7 +316,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilCreateDirectoryStep(args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def dir = stepProperties.dir
     processStep args.name, {
       actualParameter = [
@@ -329,7 +331,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createFileUtilCreateFileStep(args, activityEdges){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def file = stepProperties.file
     def contents = stepProperties.contents
     def overwrite = stepProperties.overwrite
@@ -366,6 +368,8 @@ abstract class DslBaseScript extends DslDelegatingScript {
   def insertNodeAfter(activityEdges, nodeName, newNodeName){
     //println "edges before update:" + activityEdges
     def currentEdge = activityEdges.find{it.from == nodeName}
+    if(!currentEdge)
+      return
     def currentToNode = currentEdge.to
 
     activityEdges.removeIf{it.from == nodeName}
@@ -420,7 +424,7 @@ abstract class DslBaseScript extends DslDelegatingScript {
 
   def createGeneralUtilitiesWaitStep(def args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def duration = stepProperties.duration
 
     processStep args.name, {
@@ -435,9 +439,114 @@ abstract class DslBaseScript extends DslDelegatingScript {
     }
   }
 
+  def createServiceControlManagerCreateServiceStep(def args){
+    def allowFailure = args.allowFailure
+    def stepProperties = propertiesSubstitution(args.properties)
+    def serviceName = stepProperties.Service
+    def argString = stepProperties.argString
+    processStep args.name, {
+      actualParameter = [
+        'argString': argString,
+        'serviceName': serviceName,
+      ]
+      processStepType = 'plugin'
+      subprocedure = 'Create Service'
+      subproject = '/plugins/EC-WindowsServiceControl/project'
+    }
+  }
+
+  def createServiceControlManagerDisableServiceStep(def args){
+    def allowFailure = args.allowFailure
+    def stepProperties = propertiesSubstitution(args.properties)
+    def serviceName = stepProperties.Service
+    def argString = stepProperties.argString
+    processStep args.name, {
+      actualParameter = [
+        'argString': argString,
+        'serviceNames': serviceName,
+      ]
+      processStepType = 'plugin'
+      subprocedure = 'Disable Service'
+      subproject = '/plugins/EC-WindowsServiceControl/project'
+    }
+  }
+
+  def createServiceControlManagerEnableServiceStep(def args){
+    def allowFailure = args.allowFailure
+    def stepProperties = propertiesSubstitution(args.properties)
+    def serviceName = stepProperties.Service
+    def argString = stepProperties.argString
+    def startType = stepProperties.startType
+    processStep args.name, {
+      actualParameter = [
+        'argString': argString,
+        'serviceNames': serviceName,
+        'startType': startType,
+      ]
+      processStepType = 'plugin'
+      subprocedure = 'Enable Service'
+      subproject = '/plugins/EC-WindowsServiceControl/project'
+    }
+  }
+
+  def createServiceControlManagerStartServiceStep(def args){
+    def allowFailure = args.allowFailure
+    def stepProperties = propertiesSubstitution(args.properties)
+    def serviceName = stepProperties.Service
+    def argString = stepProperties.argString
+    def waitFor = stepProperties.waitFor
+    processStep args.name, {
+      actualParameter = [
+        'argString': argString,
+        'serviceNames': serviceName,
+        'waitFor': waitFor,
+      ]
+      processStepType = 'plugin'
+      subprocedure = 'Start Service'
+      subproject = '/plugins/EC-WindowsServiceControl/project'
+    }
+  }
+
+  def createServiceControlManagerStopServiceStep(def args){
+    def allowFailure = args.allowFailure
+    def stepProperties = propertiesSubstitution(args.properties)
+    def serviceName = stepProperties.Service
+    def argString = stepProperties.argString
+    def waitFor = stepProperties.waitFor
+    // def timeout = stepProperties.timeout?:null
+
+    processStep args.name, {
+      actualParameter = [
+        'argString': argString,
+        'serviceNames': serviceName,
+        'waitFor': waitFor,
+        // 'timeout': timeout,
+      ]
+      processStepType = 'plugin'
+      subprocedure = 'Stop Service'
+      subproject = '/plugins/EC-WindowsServiceControl/project'
+    }
+  }
+
+  def createServiceControlManagerMultiServicesOperationStep(def args){
+    def allowFailure = args.allowFailure
+    def stepProperties = propertiesSubstitution(args.properties)
+    def pluginCommand = args.commandName
+    def serviceName = stepProperties.Service
+
+    processStep args.name, {
+      actualParameter = [
+        'serviceNames': serviceName,
+      ]
+      processStepType = 'plugin'
+      subprocedure = pluginCommand
+      subproject = '/plugins/EC-WindowsServiceControl/project'
+    }
+  }
+
   def createGroovyStep(def args){
     def allowFailure = args.allowFailure
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def scriptBody = stepProperties.scriptBody
     //println "Groovy plugin: $commandName ${args.name}"
     processStep args.name, {
@@ -458,11 +567,10 @@ abstract class DslBaseScript extends DslDelegatingScript {
     def impersonationUsername = args.impersonationUsername
     def impersonationUseSudo = args.impersonationUseSudo
     def commandName = args.commandName
-    def stepProperties = args.properties
+    def stepProperties = propertiesSubstitution(args.properties)
     def scriptBody = stepProperties.scriptBody
     def shellInterpreter = stepProperties.shellInterpreter
     def directoryOffset = stepProperties.directoryOffset
-    //todo: fix impersonation
     //println "Shell plugin: $commandName ${args.name}"
 
     processStep args.name, {
@@ -521,6 +629,55 @@ abstract class DslBaseScript extends DslDelegatingScript {
 			}
 		}
 	}
+
+  public final Pattern envPattern = Pattern.compile('\\$\\{p:environment[\\./]([^$\\{\\}]+)\\}')
+  public final String envSubst = '\\$[/myEnvironment/$1]'
+
+  public final Pattern resourcePattern = Pattern.compile('\\$\\{p:resource[\\./]([^$\\{\\}]+)\\}')
+  public final String resourceSubst = '\\$[/myResource/$1]'
+
+  public final Pattern componentPattern = Pattern.compile('\\$\\{p:component[\\./]([^$\\{\\}]+)\\}')
+  public final String componentSubst = '\\$[/myComponent/$1]'
+
+  public final Pattern applicationPattern = Pattern.compile('\\$\\{app[\\./]([^$\\{\\}]+)\\}')
+  public final String applicationSubst = '\\$[/myApplication/$1]'
+
+  public final Pattern genericPattern = Pattern.compile('\\$\\{([^$\\{\\}]+)\\}')
+  public final String genericSubst = '\\$[$1]'
+
+  public final Pattern generic1Pattern = Pattern.compile('\\$\\{p:([^$\\{\\}]+)\\}')
+  public final String generic1Subst = '\\$[$1]'
+
+  def propertySubstitution(propValue){
+
+    Matcher envMatcher = envPattern.matcher(propValue)
+    def result = envMatcher.replaceAll(envSubst)
+
+    Matcher resourceMatcher = resourcePattern.matcher(result)
+    result = resourceMatcher.replaceAll(resourceSubst)
+
+    Matcher componentMatcher = componentPattern.matcher(result)
+    result = componentMatcher.replaceAll(componentSubst)
+
+    Matcher applicationMatcher = applicationPattern.matcher(result)
+    result = applicationMatcher.replaceAll(applicationSubst)
+
+    Matcher generic1Matcher = generic1Pattern.matcher(result)
+    result = generic1Matcher.replaceAll(generic1Subst)
+
+    Matcher genericMatcher = genericPattern.matcher(result)
+    result = genericMatcher.replaceAll(genericSubst)
+
+    return result
+  }
+
+  def propertiesSubstitution(properties){
+    def result = {}
+    properties.each{ key, value ->
+      result[key] = propertySubstitution(value)
+    }
+    return result
+  }
 
   def createDummyCompProcessStep(contextPath, dummyStep ){
     createDummyAppProcessStep(contextPath, dummyStep, null)

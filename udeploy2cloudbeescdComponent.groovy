@@ -104,6 +104,32 @@ application myApplicationName, {
                         case "Groovy":
                           createGroovyStep(compProcessStep)
                           break
+                        case "Service Control Manager":
+                          switch(compProcessStep.commandName){
+                            case "Create Service":
+                              createServiceControlManagerCreateServiceStep(compProcessStep)
+                              break
+                            case "Start Service":
+                              createServiceControlManagerStartServiceStep(compProcessStep)
+                              break
+                            case "Stop Service":
+                              createServiceControlManagerStopServiceStep(compProcessStep)
+                              break
+                            case "Disable Service":
+                              createServiceControlManagerDisableServiceStep(compProcessStep)
+                              break
+                            case "Enable Service":
+                              createServiceControlManagerEnableServiceStep(compProcessStep)
+                              break
+                            case "Check If Service Exists":
+                            case "Check Service Status":
+                            case "Delete Service":
+                              createServiceControlManagerMultiServicesOperationStep(compProcessStep)
+                              break
+                            default:
+                              createDummyCompProcessStep(myUdeployComponentName + ":"  + myUdeployComponenProcess.name, compProcessStep)
+                          }
+                          break
                         case "File Utils":
                           switch(compProcessStep.commandName){
                             case "Copy Directory":
