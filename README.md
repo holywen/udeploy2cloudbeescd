@@ -81,7 +81,7 @@ ectool --server <your CD server host name> login <your user name>
             * Stop Service"
   6. property substitution
         * `${p:environment/propertyName}` -> `$[/myEnvironment/propertyName]`
-        * `${p:environment.propertyName}`` -> `$[/myEnvironment/propertyName]`
+        * `${p:environment.propertyName}` -> `$[/myEnvironment/propertyName]`
         * `${p:resource/propertyName}` -> `$[/myResource/propertyName]`
         * `${p:resource.propertyName}` -> `$[/myResource/propertyName]`
         * `${p:component/propertyName}` -> `$[/myComponent/propertyName]`
