@@ -80,18 +80,18 @@ ectool --server <your CD server host name> login <your user name>
             * Start Service"
             * Stop Service"
   6. property substitution
-        * \$\{p:environment/propertyName\} -> \$\[/myEnvironment/propertyName\]
-        * \$\{p:environment.propertyName\} -> \$\[/myEnvironment/propertyName\]
-        * \$\{p:resource/propertyName\} -> \$\[/myResource/propertyName\]
-        * \$\{p:resource.propertyName\} -> \$\[/myResource/propertyName\]
-        * \$\{p:component/propertyName\} -> \$\[/myComponent/propertyName\]
-        * \$\{p:component.propertyName\} -> \$\[/myComponent/propertyName\]
-        * \$\{p:app/propertyName\} -> \$\[/myApplication/propertyName\]
-        * \$\{p:app.propertyName\} -> \$\[/myApplication/propertyName\]
-        * \$\{p:propertyName\} -> \$\[propertyName\]
-        * \$\{p:propertyName\} -> \$\[propertyName\]
-        * \$\{propertyName\} -> \$\[propertyName\]
-        * \$\{propertyName\} -> \$\[propertyName\]
+        * `${p:environment/propertyName}` -> `$[/myEnvironment/propertyName]`
+        * `${p:environment.propertyName}`` -> `$[/myEnvironment/propertyName]`
+        * `${p:resource/propertyName}` -> `$[/myResource/propertyName]`
+        * `${p:resource.propertyName}` -> `$[/myResource/propertyName]`
+        * `${p:component/propertyName}` -> `$[/myComponent/propertyName]`
+        * `${p:component.propertyName}` -> `$[/myComponent/propertyName]`
+        * `${p:app/propertyName}` -> `$[/myApplication/propertyName]`
+        * `${p:app.propertyName}` -> `$[/myApplication/propertyName]`
+        * `${p:propertyName}` -> `$[propertyName]`
+        * `${p:propertyName}` -> `$[propertyName]`
+        * `${propertyName}` -> `$[propertyName]`
+        * `${propertyName}` -> `$[propertyName]`
 ## todo
   1. Application processes
         * Component Process invoke wrapper
