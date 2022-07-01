@@ -44,27 +44,13 @@ application myApplicationName, {
           def processStepNameMap = [:]
 
           applicationProcessSteps.each{ appProcessStep ->
-            switch(appProcessStep.type){
-              case "componentEnvironmentIterator":
-                updateStepNameMapping(processStepNameMap, appProcessStep)
-                def componentProcessStepInvokeData = getComponentProcessStepInvokeData(appProcessStep)
-                createComponentProcessInvokeStep(componentProcessStepInvokeData, myApplicationName, myAppTier)
-                break
-              case "componentProcess":
-                createComponentProcessInvokeStep(appProcessStep, myApplicationName,  myAppTier)
-                break
-              case "applicationManualTask":
-                createApplicationManualTaskStep(appProcessStep)
-                break
-              case "finish":
-                //do nothing
-                break;
-              case "plugin":
-              case "switch":
-              case "join":
-              default:
-                createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+            if(appProcessStep.type == 'componentEnvironmentIterator'){
+              updateStepNameMapping(processStepNameMap, appProcessStep)
             }
+          }
+
+          applicationProcessSteps.each{ appProcessStep ->
+            createApplicationProcessStep(appProcessStep, myApplicationName, myUdeployApplicationProcess.name, myAppTier)
           }
 
           // process step dependencies
@@ -96,14 +82,6 @@ application myApplicationName, {
 
 def getRealNameFromMapping( nameMap, keyName){
   return nameMap[keyName]?:keyName
-}
-
-def getComponentProcessStepInvokeData(appProcessStep){
-  if(appProcessStep.children.first().type == "componentProcess"){
-    return appProcessStep.children.first()
-  } else {
-    return appProcessStep.children.first().children.first()
-  }
 }
 
 def updateStepNameMapping( nameMap, processStepData){

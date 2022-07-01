@@ -683,6 +683,10 @@ abstract class DslBaseScript extends DslDelegatingScript {
     createDummyAppProcessStep(contextPath, dummyStep, null)
   }
 
+  def createCompProcessPlaceHolderStep(contextPath, dummyStep ){
+    createAppProcessPlaceHolderStep(contextPath, dummyStep, null)
+  }
+
 	def createApplicationManualTaskStep(args){
 		processStep args.name, {
       actionLabelText = null
@@ -697,6 +701,20 @@ abstract class DslBaseScript extends DslDelegatingScript {
       ]
     }
 	}
+
+  def createAppProcessPlaceHolderStep(contextPath, placeHolderStep, appTierName){
+    processStep placeHolderStep.name, {
+      actualParameter = [
+      'commandToRun': 'echo place holder step',
+      ]
+      if(appTierName != null){
+        applicationTierName = appTierName
+      }
+      processStepType = 'command'
+      subprocedure = 'RunCommand'
+      subproject = '/plugins/EC-Core/project'
+    }
+  }
 
   def createDummyAppProcessStep(contextPath, dummyStep, appTierName){
     println "context path: $contextPath"
@@ -714,6 +732,149 @@ abstract class DslBaseScript extends DslDelegatingScript {
       processStepType = 'command'
       subprocedure = 'RunCommand'
       subproject = '/plugins/EC-Core/project'
+    }
+  }
+
+  def createApplicationProcessStep(appProcessStep, myApplicationName, myApplicationProcessName, myAppTier){
+    switch(appProcessStep.type){
+      case "componentEnvironmentIterator":
+        def componentProcessStepInvokeData = getComponentProcessStepInvokeData(appProcessStep)
+        createComponentProcessInvokeStep(componentProcessStepInvokeData, myApplicationName, myAppTier)
+        break
+      case "componentProcess":
+        createComponentProcessInvokeStep(appProcessStep, myApplicationName,  myAppTier)
+        break
+      case "applicationManualTask":
+        createApplicationManualTaskStep(appProcessStep)
+        break
+      case "finish":
+        //do nothing
+        break
+      case "switch":
+      case "join":
+        createAppProcessPlaceHolderStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+        break
+      case "plugin":
+      default:
+        createDummyAppProcessStep(myApplicationName + ":"  + myUdeployApplicationProcess.name, appProcessStep, myAppTier)
+    }
+  }
+
+  def getComponentProcessStepInvokeData(appProcessStep){
+    if(appProcessStep.children.first().type == "componentProcess"){
+      return appProcessStep.children.first()
+    } else {
+      return appProcessStep.children.first().children.first()
+    }
+  }
+
+  def createComponentProcessStep(compProcessStep, componentProcessEdges, myComponentName, myComponentProcessName, myComponentPlugin){
+    switch(compProcessStep.type){
+      case "plugin":
+        switch(compProcessStep.pluginName){
+          case "Linux System Tools":
+            switch(compProcessStep.commandName){
+              case "Set file permissions":
+                createLinuxSystemToolsSetFilePermissionsStep(compProcessStep)
+                break
+              default:
+                createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+            }
+            break
+          case "General Utilities":
+            switch(compProcessStep.commandName){
+              case "Wait":
+                createGeneralUtilitiesWaitStep(compProcessStep)
+                break
+              default:
+                createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+            }
+            break
+          case "Shell":
+            createShellStep(compProcessStep)
+            break
+          case "Groovy":
+            createGroovyStep(compProcessStep)
+            break
+          case "Service Control Manager":
+            switch(compProcessStep.commandName){
+              case "Create Service":
+                createServiceControlManagerCreateServiceStep(compProcessStep)
+                break
+              case "Start Service":
+                createServiceControlManagerStartServiceStep(compProcessStep)
+                break
+              case "Stop Service":
+                createServiceControlManagerStopServiceStep(compProcessStep)
+                break
+              case "Disable Service":
+                createServiceControlManagerDisableServiceStep(compProcessStep)
+                break
+              case "Enable Service":
+                createServiceControlManagerEnableServiceStep(compProcessStep)
+                break
+              case "Check If Service Exists":
+              case "Check Service Status":
+              case "Delete Service":
+                createServiceControlManagerMultiServicesOperationStep(compProcessStep)
+                break
+              default:
+                createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+            }
+            break
+          case "File Utils":
+            switch(compProcessStep.commandName){
+              case "Copy Directory":
+                createFileUtilCopyDirectoryStep(compProcessStep)
+                break
+              case "Create Directories":
+                createFileUtilCreateDirectoryStep(compProcessStep)
+                break
+              case "Create File":
+                createFileUtilCreateFileStep(compProcessStep, componentProcessEdges)
+                break
+              case "Delete Files and Directories":
+                createFileUtilDeleteFilesandDirectoriesStep(compProcessStep)
+                break
+              case "Unzip":
+                createFileUtilUnzipStep(compProcessStep)
+                break
+              case "Untar Tarball":
+                createFileUtilUntarTarballStep(compProcessStep)
+                break
+              case "Move Directory":
+                createFileUtilMoveDirectoryStep(compProcessStep)
+                break
+              case "Flip Line Endings":
+              case "Replace Tokens":
+              case "Update XML File with XPath":
+              default:
+                createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+            }
+            break
+          case "UrbanCode Deploy Versioned File Storage":
+            switch(compProcessStep.commandName){
+              case "Download Artifacts":
+                createRetrieveArtifactStep(compProcessStep, myComponentPlugin, myComponentName)
+                break
+              default:
+                createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+            }
+            break
+
+          default:
+            createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+        }
+        break
+      case "finish":
+        //do nothing
+        break
+      case "switch":
+      case "join":
+        createCompProcessPlaceHolderStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
+        break
+      default:
+        createDummyCompProcessStep(myComponentName + ":"  + myComponentProcessName, compProcessStep)
     }
   }
 }
